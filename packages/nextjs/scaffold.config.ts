@@ -2,7 +2,7 @@ import { liskSepolia } from "./chains";
 import * as chains from "viem/chains";
 
 export type ScaffoldConfig = {
-  targetNetworks: readonly chains.Chain[];
+  targetNetworks: readonly chains.Chain[]; // bisa rubah ke lisk klo err
   pollingInterval: number;
   alchemyApiKey: string;
   walletConnectProjectId: string;

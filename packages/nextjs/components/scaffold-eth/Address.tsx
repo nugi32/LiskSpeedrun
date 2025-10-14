@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import copy from "copy-to-clipboard";
 import { Address as AddressType, getAddress, isAddress } from "viem";
 import { hardhat } from "viem/chains";
 import { useEnsAvatar, useEnsName } from "wagmi";
@@ -51,16 +51,9 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
     cacheTime: 30_000,
   });
 
-  // We need to apply this pattern to avoid Hydration errors.
-  useEffect(() => {
-    setEns(fetchedEns);
-  }, [fetchedEns]);
+  useEffect(() => setEns(fetchedEns), [fetchedEns]);
+  useEffect(() => setEnsAvatar(fetchedEnsAvatar), [fetchedEnsAvatar]);
 
-  useEffect(() => {
-    setEnsAvatar(fetchedEnsAvatar);
-  }, [fetchedEnsAvatar]);
-
-  // Skeleton UI
   if (!checkSumAddress) {
     return (
       <div className="animate-pulse flex space-x-4">
@@ -79,11 +72,8 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
   const blockExplorerAddressLink = getBlockExplorerAddressLink(targetNetwork, checkSumAddress);
   let displayAddress = checkSumAddress?.slice(0, 6) + "..." + checkSumAddress?.slice(-4);
 
-  if (ens) {
-    displayAddress = ens;
-  } else if (format === "long") {
-    displayAddress = checkSumAddress;
-  }
+  if (ens) displayAddress = ens;
+  else if (format === "long") displayAddress = checkSumAddress;
 
   return (
     <div className="flex items-center">
@@ -94,6 +84,7 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
           size={(blockieSizeMap[size] * 24) / blockieSizeMap["base"]}
         />
       </div>
+
       {disableAddressLink ? (
         <span className={`ml-1.5 text-${size} font-normal`}>{displayAddress}</span>
       ) : targetNetwork.id === hardhat.id ? (
@@ -110,26 +101,22 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
           {displayAddress}
         </a>
       )}
+
       {addressCopied ? (
         <CheckCircleIcon
           className="ml-1.5 text-xl font-normal text-sky-600 h-5 w-5 cursor-pointer"
           aria-hidden="true"
         />
       ) : (
-        <CopyToClipboard
-          text={checkSumAddress}
-          onCopy={() => {
+        <DocumentDuplicateIcon
+          className="ml-1.5 text-xl font-normal text-sky-600 h-5 w-5 cursor-pointer"
+          aria-hidden="true"
+          onClick={() => {
+            copy(checkSumAddress);
             setAddressCopied(true);
-            setTimeout(() => {
-              setAddressCopied(false);
-            }, 800);
+            setTimeout(() => setAddressCopied(false), 800);
           }}
-        >
-          <DocumentDuplicateIcon
-            className="ml-1.5 text-xl font-normal text-sky-600 h-5 w-5 cursor-pointer"
-            aria-hidden="true"
-          />
-        </CopyToClipboard>
+        />
       )}
     </div>
   );
