@@ -1,4 +1,4 @@
-import { liskSepolia } from "./chains";
+import { liskSepolia } from "./chains/liskSepolia";
 import * as chains from "viem/chains";
 
 export type ScaffoldConfig = {
