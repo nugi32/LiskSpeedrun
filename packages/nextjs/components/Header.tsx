@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { Bars3Icon, BugAntIcon, HomeIcon } from "@heroicons/react/24/outline";
+import { ArrowsRightLeftIcon } from "@heroicons/react/24/outline";
 import {
   DappConsoleButton,
   FaucetButton,
@@ -25,6 +26,11 @@ export const menuLinks: HeaderMenuLink[] = [
     label: "Home",
     href: "/",
     icon: <HomeIcon className="h-4 w-4" />,
+  },
+  {
+    label: "DEX",
+    href: "/dex",
+    icon: <ArrowsRightLeftIcon className="h-4 w-4" />,
   },
   {
     label: "Debug Contracts",
